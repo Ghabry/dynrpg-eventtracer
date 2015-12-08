@@ -10,15 +10,16 @@ void onMoveCommand() {
 	RPG::Character* character;
 	char* _edx;
 	char* _eax;
-	
 	unsigned int address = 0x478E80;
 
+	// Load registers to C variables
 	asm("movl %%esi, %0\n\t"
 		"movl %%edx, %1\n\t"
 		"movl %%eax, %2\n\t"
 		: "=r" (character), "=r" (_edx), "=r" (_eax));
 
-	// Invoke the overwritten call
+	// Invoke the overwritten function call
+	// return in eax, arguments in eax and edx
 	__asm volatile(
 		"call *%1\n\t"
 		: "=a" (_eax)
@@ -34,6 +35,7 @@ void onMoveCommand() {
 bool onStartup(char *pluginName) {
 	DWORD old_protect;
 
+	// Patch call at 0x4C51A5 to call onMoveCommand
 	VirtualProtect((DWORD*)0x4C51A5, 4, PAGE_EXECUTE_READWRITE, &old_protect);
 	*(DWORD*)(0x4C51A5) = (DWORD)onMoveCommand - 0x4C51A4 - 5;
 	VirtualProtect((DWORD*)0x4C51A5, 4, PAGE_EXECUTE, &old_protect);
