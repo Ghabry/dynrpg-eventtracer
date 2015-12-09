@@ -13,7 +13,8 @@ void onMoveCommand() {
 	unsigned int address = 0x478E80;
 
 	// Load registers to C variables
-	asm("movl %%esi, %0\n\t"
+	// Character is obtained by reading the stack frame of the caller...
+	asm("movl 48(%%ebp), %0\n\t"
 		"movl %%edx, %1\n\t"
 		"movl %%eax, %2\n\t"
 		: "=r" (character), "=r" (_edx), "=r" (_eax));
