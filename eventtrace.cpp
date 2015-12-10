@@ -58,9 +58,16 @@ bool onStartup(char *pluginName) {
 }
 
 bool onEventCommand(
-	RPG::EventScriptLine*, RPG::EventScriptData*,
+	RPG::EventScriptLine* esl, RPG::EventScriptData*,
 	int eventId, int pageId, int lineId, int*) {
+	if (esl->command == 0) {
+		// Invalid line, no idea why RPG_RT executes this
+		return true;
+	}
+		
 	ofs << "E\t" << eventId << "\t" << pageId << "\t" << lineId << std::endl;
+	
+	return true;
 }
 
 bool onComment(const char*  text,  
@@ -69,6 +76,8 @@ bool onComment(const char*  text,
 	RPG::EventScriptData*,  
 	int, int, int, int*) {
 	ofs << "# " << text << std::endl;
+	
+	return true;
 }
 
 void onExit() {
