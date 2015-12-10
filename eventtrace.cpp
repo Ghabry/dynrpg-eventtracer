@@ -63,6 +63,14 @@ bool onEventCommand(
 	ofs << "E\t" << eventId << "\t" << pageId << "\t" << lineId << std::endl;
 }
 
+bool onComment(const char*  text,  
+	const RPG::ParsedCommentData*,  
+	RPG::EventScriptLine*,  
+	RPG::EventScriptData*,  
+	int, int, int, int*) {
+	ofs << "# " << text << std::endl;
+}
+
 void onExit() {
 	std::time_t t = std::time(NULL);
 	char timestr[100];
