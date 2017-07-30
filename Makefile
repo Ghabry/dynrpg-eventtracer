@@ -1,8 +1,11 @@
+CC ?= g++
+DYNRPG ?= dynrpg
+
 eventtrace: eventtrace.o
-	g++ -shared -o eventtrace.dll eventtrace.o -Wl,--out-implib,libeventtrace.a
+	$(CC) -shared -o eventtrace.dll eventtrace.o -Wl,--out-implib,libeventtrace.a
 
 eventtrace.o:
-	g++ -c -I${DYNRPG}/include -L${DYNRPG}/lib -lDynRPG eventtrace.cpp
+	$(CC) -c -I$(DYNRPG)/include -L$(DYNRPG)/lib -lDynRPG eventtrace.cpp
 
 all: eventtrace
 	
