@@ -5,6 +5,15 @@
 #include <sstream>
 
 std::ofstream ofs;
+int frame_count = 0;
+bool frame_echoed = false;
+
+void printFrame() {
+	if (!frame_echoed) {
+		ofs << "F\t" << frame_count << std::endl;
+		frame_echoed = true;
+	}
+}
 
 void onMoveCommand() {
 	RPG::Character* character;
@@ -29,6 +38,7 @@ void onMoveCommand() {
 
 	// Save all registers and run own code
 	asm("pusha":);
+	printFrame();
 	ofs << "M\t" << character->id << "\t" << character->_unknown_44 << std::endl;
 	asm("popa":);
 }
@@ -51,6 +61,7 @@ bool onStartup(char *pluginName) {
 
 	strftime(timestr, 100, "%Y-%m-%d %H:%M:%S", std::localtime(&t));
 	ofs << "# Session start at " << timestr << std::endl;
+	ofs << "# F\tframe" << std::endl;
 	ofs << "# E\tevt_id\tpage_id\tline_id" << std::endl;
 	ofs << "# M\tevt_id\tline_id" << std::endl;
 
@@ -65,19 +76,32 @@ bool onEventCommand(
 		return true;
 	}
 
+	printFrame();
 	ofs << "E\t" << eventId << "\t" << pageId << "\t" << lineId << std::endl;
 
 	return true;
 }
 
-bool onComment(const char*  text,
+bool onComment(const char* text,
 	const RPG::ParsedCommentData*,
 	RPG::EventScriptLine*,
 	RPG::EventScriptData*,
 	int, int, int, int*) {
+	printFrame();
+
 	ofs << "# " << text << std::endl;
 
 	return true;
+}
+
+void onFrame (RPG::Scene scene) {
+	frame_echoed = false;
+
+	if (scene != RPG::SCENE_MAP) {
+		frame_count = 0;
+	} else if (scene == RPG::SCENE_MAP) {
+		frame_count++;
+	}
 }
 
 void onExit() {
