@@ -1,11 +1,13 @@
-CC ?= g++
+#For local build configuration MinGW, Dynrpg, etc..
+-include local.mk
+MINGW ?= mingw
 DYNRPG ?= dynrpg
 
 eventtrace: eventtrace.o
-	$(CC) -shared -o eventtrace.dll eventtrace.o -Wl,--out-implib,libeventtrace.a
+	$(CXX) -shared -o eventtrace.dll eventtrace.o -Wl,--out-implib,libeventtrace.a -L$(DYNRPG)/lib -lDynRPG
 
 eventtrace.o:
-	$(CC) -c -I$(DYNRPG)/include -L$(DYNRPG)/lib -lDynRPG eventtrace.cpp
+	$(CXX) -std=c++11 -D_GLIBCXX_USE_CXX11_ABI=0 -c -I$(DYNRPG)/include eventtrace.cpp
 
 all: eventtrace
 	
