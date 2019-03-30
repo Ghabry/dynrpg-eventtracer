@@ -1,4 +1,3 @@
-#define AUTO_DLLMAIN
 #include <DynRPG/DynRPG.h>
 #include <fstream>
 #include <ctime>
