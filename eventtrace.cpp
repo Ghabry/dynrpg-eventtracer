@@ -1,4 +1,3 @@
-#define AUTO_DLLMAIN
 #include <DynRPG/DynRPG.h>
 #include <fstream>
 #include <ctime>
@@ -39,7 +38,7 @@ void onMoveCommand() {
 	// Save all registers and run own code
 	asm("pusha":);
 	printFrame();
-	ofs << "M\t" << character->id << "\t" << character->_unknown_44 << std::endl;
+	ofs << "M\t" << character->id << "\t" << character->moveRoutePosition << std::endl;
 	asm("popa":);
 }
 
